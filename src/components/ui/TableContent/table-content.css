@@ -61,12 +61,20 @@
   justify-content: space-between;
   padding: 0 1vw;
   border-radius: 14px;
+  transition: 0.5s;
 }
 .branch .department-list .department-item.active {
   background: #86c5ff7a;
 }
+.branch .department-list .department-item:hover {
+  background: #86c5ff7a;
+}
+.branch .department-list .department-item.active .action-icons {
+  visibility: visible;
+}
 
 .branch .department-list .department-item .action-icons {
+  visibility: hidden;
   width: 5.5vw;
   justify-content: space-between;
 }

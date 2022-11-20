@@ -1,0 +1,41 @@
+.row-menubar {
+  height: 15vh;
+  border-bottom: 2px solid #bebebe;
+}
+.users-online .user-online img {
+  border-radius: 50px;
+  width: 50px;
+  cursor: pointer;
+}
+.left-side {
+  justify-content: space-evenly;
+}
+.select-side .form-control {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.users-online .user-more {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background: #d6d6d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.share-search {
+  justify-content: space-between;
+}
+.action-col {
+  justify-content: space-between;
+  font-weight: 700;
+}
+.add-new {
+  width: 100%;
+}
+.filter,
+.sort,
+.template,
+.synchronized  {
+  text-shadow: 2px 2px 11px #f1f2f3;
+  
+}

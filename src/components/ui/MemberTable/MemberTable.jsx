@@ -18,7 +18,7 @@ const employees = [
 
 const MemberTable = () => {
 
-    const [showEditBtns, setShowEditBtns] = useState(true)
+    const [showEditBtns, setShowEditBtns] = useState(false)
 
     return (
 
@@ -44,7 +44,7 @@ const MemberTable = () => {
                 </div>
                 <div className="list-employees">
                     {employees.map((employee, index) => (
-                        <div className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""}`}>
+                        <div key={index} className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""}`}>
                             <div className="avt">
                                 <img src={employee.imgUrl} alt="" />
                             </div>

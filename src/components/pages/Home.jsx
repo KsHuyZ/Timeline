@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Col, Container, Row } from 'reactstrap'
+import Header from '../Header/Header'
 import MemberTable from '../ui/MemberTable/MemberTable'
 import Profile from '../ui/Profile/Profile'
 import TableContent from '../ui/TableContent/TableContent'
@@ -10,13 +11,16 @@ const Home = () => {
         setShowMemberTable((prev) => !prev)
     }
     return (
-        <Container fluid className='mt-5'>
-            <Row>
-                <TableContent showMembers={handleShowMembers} />
-                <MemberTable />
-                <Profile />
-            </Row>
-        </Container>
+        <>
+            <Header />
+            <Container fluid className='mt-5'>
+                <Row>
+                    <TableContent showMembers={handleShowMembers} />
+                    <MemberTable />
+                    <Profile />
+                </Row>
+            </Container>
+        </>
     )
 }
 

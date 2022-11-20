@@ -10,27 +10,27 @@ const contentArray =
         {
             branchName: "Chi nhánh Hà Nội",
             departments: [
-                { name: "Phòng nhân sự" },
-                { name: "Phòng kế toán" },
-                { name: "Phòng kinh doanh" },
+                { id: 1, name: "Phòng nhân sự" },
+                { id: 2, name: "Phòng kế toán" },
+                { id: 3, name: "Phòng kinh doanh" },
 
             ]
         },
         {
             branchName: "Chi nhánh Hà Nội",
             departments: [
-                { name: "Phòng nhân sự" },
-                { name: "Phòng kế toán" },
-                { name: "Phòng kinh doanh" },
+                { id: 4, name: "Phòng nhân sự" },
+                { id: 5, name: "Phòng kế toán" },
+                { id: 6, name: "Phòng kinh doanh" },
 
             ]
         },
         {
             branchName: "Chi nhánh Hà Nội",
             departments: [
-                { name: "Phòng nhân sự" },
-                { name: "Phòng kế toán" },
-                { name: "Phòng kinh doanh" },
+                { id: 7, name: "Phòng nhân sự" },
+                { id: 8, name: "Phòng kế toán" },
+                { id: 9, name: "Phòng kinh doanh" },
 
             ]
         },
@@ -42,7 +42,7 @@ const TableContent = ({ showMembers }) => {
 
 
     const [isOpenArray, setIsOpenArray] = useState([0, 1, 2])
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState()
     const handleSetOpenTab = (index) => {
         if (!isOpenArray.includes(index)) {
             setIsOpenArray((prev) => prev.concat(index))

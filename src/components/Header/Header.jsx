@@ -5,6 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { NavLink, Link } from "react-router-dom";
 import logo from "../../assets/logo.png"
 import avt from '../../assets/avatar.png'
+import { useNavigate } from "react-router-dom";
 
 const NAV__LINKS = [
     {
@@ -38,6 +39,8 @@ const NAV__LINKS = [
 
 const Header = () => {
 
+    const navigate = useNavigate()
+
     return (
         <header className="header" >
             <Container fluid>
@@ -66,9 +69,9 @@ const Header = () => {
                         </ul>
                     </div>
 
-                    <div className="nav__right d-flex align-items-center gap-5 ">
+                    <div className="nav__right d-flex align-items-center gap-5 " onClick={() => navigate("/login")}>
                         <div className="btn d-flex gap-2 align-items-center button">
-                            <button className="btn d-flex gap-2 align-items-center">
+                            <button className="btn d-flex gap-2 align-items-center" >
                                 <div className="img">
                                     <img src={avt} alt="" />
                                 </div>
