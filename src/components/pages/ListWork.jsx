@@ -9,6 +9,7 @@ import '../../styles/list-work.css'
 import { useState } from 'react';
 import MenuBar from '../ui/MenuBar/MenuBar';
 import ColTask from "../ui/ColTask/ColTask"
+import AddWork from '../ui/AddWork/AddWork';
 
 const userOnline = [
     {
@@ -65,6 +66,7 @@ const colTask = [{
 const ListWork = () => {
 
     const [age, setAge] = useState(1);
+    const [showModalAdd, setShowModalAdd] = useState(false)
 
     const handleChange = (event) => {
         setAge(event.target.value);
@@ -73,9 +75,10 @@ const ListWork = () => {
 
     return (
         <>
+            {showModalAdd && <AddWork showModal={setShowModalAdd} />}
             <Header />
             <Container fluid>
-                <MenuBar age={age} handleChange={handleChange} userOnline={userOnline} />
+                <MenuBar age={age} handleChange={handleChange} userOnline={userOnline} showModal={setShowModalAdd} />
                 <Row>
                     {colTask.map((task) => (<ColTask title={task.title} color={task.color} />))}
                 </Row>

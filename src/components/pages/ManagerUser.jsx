@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../Header/Header'
 import "../../styles/manager-user.css"
 import AddIcon from '@mui/icons-material/Add';
@@ -16,6 +16,8 @@ import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
+import ModalDelete from "../ui/ModalDelete/ModalDelete"
+import AddUser from '../ui/AddUser/AddUser';
 
 const columns = [
     { id: 'number', label: 'STT', maxWidth: 60 },
@@ -80,11 +82,12 @@ const rows = [
     createData(15, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
 ];
 
-const ManagerUser = () => {
+const ManagerUser = ({ }) => {
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+    const [openModalDelete, setOpenModalDelete] = useState(false)
+    const [typeModal, setTypeModal] = useState()
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -96,12 +99,14 @@ const ManagerUser = () => {
 
     return (
         <>
+            {openModalDelete && <ModalDelete title={"Bạn muốn xoá thông tin người dùng"} showModal={setOpenModalDelete} />}
+            {typeModal && <AddUser type={typeModal} setType={setTypeModal} />}
             <Header />
             <div className='manager-user pt-5'>
                 <Container >
                     <div className="action-btns d-flex ">
                         <div className="add-user">
-                            <button type="button" class="btn btn-primary"><AddIcon />Thêm mới</button>
+                            <button type="button" class="btn btn-primary" onClick={() => setTypeModal("add")}><AddIcon />Thêm mới</button>
                         </div>
                         <div className="add-from-file">
                             <button type="button" class="btn btn-outline-primary"> <FileUploadOutlinedIcon /> Thêm từ file</button>
@@ -175,8 +180,8 @@ const ManagerUser = () => {
                                                         <TableCell key={"actions"} style={{ color: "#919EAB" }} className="actions">
 
                                                             <KeyRoundedIcon style={{ cursor: "pointer" }} />
-                                                            <ModeEditOutlineRoundedIcon style={{ cursor: "pointer" }} />
-                                                            <CloseIcon style={{ cursor: "pointer" }} />
+                                                            <ModeEditOutlineRoundedIcon style={{ cursor: "pointer" }} onClick={() => setTypeModal("edit")} />
+                                                            <CloseIcon style={{ cursor: "pointer" }} onClick={() => setOpenModalDelete(true)} />
                                                         </TableCell>
                                                     </TableRow>
                                                 );

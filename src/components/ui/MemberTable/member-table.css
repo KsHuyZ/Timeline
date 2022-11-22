@@ -4,6 +4,49 @@
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
 }
+
+.modal-delete {
+  position: fixed;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-delete .pop-up-delete {
+  background-color: white;
+  /* width: 30vw;
+  height: 20vw; */
+  border-radius: 6px;
+  background-color: white;
+
+  padding: 16px 21px;
+}
+.modal-delete .pop-up-delete .title {
+  font-weight: 700;
+}
+.modal-delete .pop-up-delete .yes-no {
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.modal-delete .pop-up-delete .yes-no .yes-no-wrapper {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-delete .pop-up-delete .yes-no .no {
+  color: #919eab;
+  cursor: pointer;
+}
+
 .member-section .header-title {
   justify-content: space-between;
   padding-top: 35px;
@@ -39,12 +82,27 @@
   overflow-y: auto;
 }
 .list-employees .emplopyee {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-employees .emplopyee .title-profile {
   height: 100px;
   align-items: center;
   padding: 0 13px;
+  cursor: pointer;
 }
+.list-employees .emplopyee .action-icons {
+  width: 15%;
+  display: flex;
+  justify-content: space-around;
+}
+
 .list-employees .emplopyee.active {
   background: #f2f9ff;
+}
+.list-employees .emplopyee.selected {
+  background: rgba(24, 144, 255, 0.25);
 }
 .list-employees .emplopyee .avt {
   width: 57px;

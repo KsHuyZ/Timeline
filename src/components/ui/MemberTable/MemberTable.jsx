@@ -4,21 +4,33 @@ import { Input, TextField } from '@mui/material';
 import './member-table.css'
 import img from "../../../assets/employee.png"
 import SaveIcon from '@mui/icons-material/Save';
-
+import SettingsIcon from '@mui/icons-material/Settings';
+import CloseIcon from '@mui/icons-material/Close';
+// import Button from '@mui/material/Button';
 const employees = [
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 1, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 2, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 3, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 4, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 5, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 6, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 7, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
+    { id: 8, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
 ]
 
-const MemberTable = () => {
+
+const MemberTable = ({ showModal }) => {
 
     const [showEditBtns, setShowEditBtns] = useState(false)
+    const [memberSelected, setMemberSelected] = useState()
+
+    const handleSelectMember = (id) => {
+        if (memberSelected !== id) {
+            setMemberSelected(id)
+        } else {
+            setMemberSelected()
+        }
+    }
 
     return (
 
@@ -44,18 +56,24 @@ const MemberTable = () => {
                 </div>
                 <div className="list-employees">
                     {employees.map((employee, index) => (
-                        <div key={index} className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""}`}>
-                            <div className="avt">
-                                <img src={employee.imgUrl} alt="" />
-                            </div>
-                            <div className="detail">
-                                <div className="name-email">
-                                    {`${employee.name} - ${employee.mail}`}
+                        <div key={index} className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""} ${memberSelected === employee.id ? "selected" : ""}`} onClick={() => handleSelectMember(employee.id)} >
+                            <div className="title-profile d-flex">
+                                <div className="avt">
+                                    <img src={employee.imgUrl} alt="" />
                                 </div>
-                                <div className="postion">
-                                    {`${employee.position}`}
+                                <div className="detail">
+                                    <div className="name-email">
+                                        {`${employee.name} - ${employee.mail}`}
+                                    </div>
+                                    <div className="postion">
+                                        {`${employee.position}`}
+                                    </div>
                                 </div>
                             </div>
+                            {memberSelected === employee.id && <div className="action-icons">
+                                <SettingsIcon />
+                                <CloseIcon onClick={() => showModal(true)} style={{ cursor: 'pointer' }} />
+                            </div>}
                         </div>
                     ))}
                 </div>

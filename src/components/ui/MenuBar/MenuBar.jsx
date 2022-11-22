@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => {
     });
 });
 
-const MenuBar = ({ age, handleChange, userOnline }) => {
+const MenuBar = ({ age, handleChange, userOnline, showModal }) => {
     const { search } = useStyles();
     return (
         <Row className='align-items-center row-menubar'>
@@ -101,7 +101,7 @@ const MenuBar = ({ age, handleChange, userOnline }) => {
                 </div>
             </Col>
             <Col lg="2">
-                <Button variant="contained" className='add-new'>Thêm mới</Button>
+                <Button variant="contained" className='add-new' onClick={() => showModal(true)}>Thêm mới</Button>
             </Col>
         </Row>
     )
