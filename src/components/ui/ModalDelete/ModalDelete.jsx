@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ModalDelete = ({ title, showModal }) => {
+const ModalDelete = ({ title, showModal, deleteUser }) => {
     return (
         <div className="modal-delete d-flex">
             <div className="pop-up-delete">
@@ -11,7 +11,10 @@ const ModalDelete = ({ title, showModal }) => {
                             Hủy bỏ
                         </div>
                         <div className="yes">
-                            <button type="button" class="btn btn-primary" onClick={() => showModal(false)}>Đồng ý</button>
+                            <button type="button" class="btn btn-primary" onClick={() => {
+                                deleteUser()
+                                showModal(false)
+                            }}>Đồng ý</button>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../Header/Header'
 import "../../styles/manager-user.css"
 import AddIcon from '@mui/icons-material/Add';
@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
 import ModalDelete from "../ui/ModalDelete/ModalDelete"
 import AddUser from '../ui/AddUser/AddUser';
+import axios from '../../lib/axios';
 
 const columns = [
     { id: 'number', label: 'STT', maxWidth: 60 },
@@ -50,44 +51,31 @@ const columns = [
         // align: 'center',
         format: (value) => value.toFixed(2),
     },
-    // {
-    //     id: 'actions',
-    //     label: 'Thao tác',
-    //     minWidth: 90,
-    //     align: 'center',
-    //     format: (value) => value.toFixed(2),
-    // },
+
 ];
 
-function createData(number, fullname, email, position, department, typeuser) {
+function createData(number, fullname, email, position, department, typeuser, id) {
 
-    return { number, fullname, email, position, department, typeuser };
+    return { number, fullname, email, position, department, typeuser, id };
 }
 
-const rows = [
-    createData(1, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(2, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(3, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(4, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(5, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(6, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(7, 'Germany', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(8, 'Ireland', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(9, 'Mexico', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(10, 'Japan', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(11, 'France', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(12, 'United Kingdom', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(13, 'Russia', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(14, 'Nigeria', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-    createData(15, 'Nguyễn Văn A', 'nguyenvana@gmail.com', "Trưởng phòng", "Phòng kinh doanh", "Trưởng phòng"),
-];
-
-const ManagerUser = ({ }) => {
-
+const ManagerUser = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [openModalDelete, setOpenModalDelete] = useState(false)
     const [typeModal, setTypeModal] = useState()
+    const [users, setUsers] = useState([])
+    const [userSelected, setUserSelected] = useState()
+    const rows = users.map((user, index) => (
+        createData(index + 1, user.name, user.email, user.position, user.idDepartment.nameDepartment, user.role, user._id)
+    ))
+
+
+    const handleGetAllUser = async () => {
+        const response = await axios.get("/users/all-user")
+        setUsers(response.data)
+    }
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -97,14 +85,26 @@ const ManagerUser = ({ }) => {
         setPage(0);
     };
 
+    const handleDeleteUser = async () => {
+        try {
+            await axios.delete(`/users/${userSelected}`)
+            handleGetAllUser()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        handleGetAllUser()
+    }, [])
+
     return (
         <>
-            {openModalDelete && <ModalDelete title={"Bạn muốn xoá thông tin người dùng"} showModal={setOpenModalDelete} />}
-            {typeModal && <AddUser type={typeModal} setType={setTypeModal} />}
+            {openModalDelete && <ModalDelete title={"Bạn muốn xoá thông tin người dùng"} showModal={setOpenModalDelete} deleteUser={handleDeleteUser} />}
+            {typeModal && <AddUser type={typeModal} setType={setTypeModal} user={userSelected} setUser={setUserSelected} getAllUser={handleGetAllUser} />}
             <Header />
             <div className='manager-user pt-5'>
                 <Container >
-                    <div className="action-btns d-flex ">
+                    <div className="action-btns d-flex">
                         <div className="add-user">
                             <button type="button" class="btn btn-primary" onClick={() => setTypeModal("add")}><AddIcon />Thêm mới</button>
                         </div>
@@ -115,8 +115,7 @@ const ManagerUser = ({ }) => {
                     </div>
                     <div className="table-manager pt-5">
 
-
-                        <Paper sx={{ width: '100%', overflow: 'hidden', paddingTop: 3 }} className="table-container">
+                        <Paper sx={{ width: '100%', overflow: 'hidden' }} className="table-container">
                             <TableContainer sx={{ maxHeight: 440 }} >
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
@@ -126,7 +125,6 @@ const ManagerUser = ({ }) => {
                                                     key={column.id}
                                                     align={column.align}
                                                     style={{ minWidth: column.minWidth, backgroundColor: "#F4F6F8" }}
-
                                                 >
                                                     {column.label}
                                                 </TableCell>
@@ -138,7 +136,7 @@ const ManagerUser = ({ }) => {
 
                                     </TableHead>
                                     <TableBody>
-                                        <TableRow style={{ backgroundColor: "#F4F6F8", marginTop: 10 }} className="table-row">
+                                        {/* <TableRow style={{ backgroundColor: "#F4F6F8", marginTop: 10 }} className="table-row">
                                             <TableCell></TableCell>
                                             <TableCell><input /></TableCell>
                                             <TableCell><input /></TableCell>
@@ -158,7 +156,7 @@ const ManagerUser = ({ }) => {
                                                 </select>
                                             </TableCell >
                                             <TableCell></TableCell>
-                                        </TableRow>
+                                        </TableRow> */}
                                         {rows
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((row, index) => {
@@ -180,7 +178,10 @@ const ManagerUser = ({ }) => {
                                                         <TableCell key={"actions"} style={{ color: "#919EAB" }} className="actions">
 
                                                             <KeyRoundedIcon style={{ cursor: "pointer" }} />
-                                                            <ModeEditOutlineRoundedIcon style={{ cursor: "pointer" }} onClick={() => setTypeModal("edit")} />
+                                                            <ModeEditOutlineRoundedIcon style={{ cursor: "pointer" }} onClick={() => {
+                                                                setTypeModal("edit")
+                                                                setUserSelected(row.id)
+                                                            }} />
                                                             <CloseIcon style={{ cursor: "pointer" }} onClick={() => setOpenModalDelete(true)} />
                                                         </TableCell>
                                                     </TableRow>

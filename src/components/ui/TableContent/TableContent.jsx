@@ -38,7 +38,7 @@ const contentArray =
 
 
 
-const TableContent = ({ showMembers }) => {
+const TableContent = ({ showMembers, showModal }) => {
 
 
     const [isOpenArray, setIsOpenArray] = useState([0, 1, 2])
@@ -74,7 +74,7 @@ const TableContent = ({ showMembers }) => {
                             </div>
                             {isOpenArray.includes(index) && <div className="department-list">
                                 {item.departments.map((i, id) => (
-                                    <Department key={id} item={i} setIsActive={setIsActive} isActive={isActive} />
+                                    <Department key={id} item={i} setIsActive={setIsActive} isActive={isActive} showModal={showModal}/>
                                 ))}
                             </div>}
 
