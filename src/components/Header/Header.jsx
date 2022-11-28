@@ -40,6 +40,13 @@ const NAV__LINKS = [
 const Header = () => {
 
     const navigate = useNavigate()
+    const [currentUsers, setCurrentUsers] = useState([]);
+    useEffect(() => {
+        const items = JSON.parse(localStorage.getItem('currentUser'));
+        if (items) {
+            setCurrentUsers(items);
+        }
+    }, []);
 
     return (
         <header className="header" >
@@ -51,7 +58,6 @@ const Header = () => {
                             <div style={{ fontFamily: 'Roboto' }}> Fine Team</div>
                         </h2>
                     </div>
-
                     <div className="nav__menu" >
                         <ul className="nav__list">
                             {NAV__LINKS?.map((item, index) => (
@@ -62,7 +68,7 @@ const Header = () => {
                                             navClass.isActive ? "active" : ""
                                         }
                                     >
-                                        <div className="link">     {item.display}</div>
+                                        <div className="link">{item.display}</div>
                                     </NavLink>
                                 </li>
                             ))}
@@ -73,11 +79,11 @@ const Header = () => {
                         <div className="btn d-flex gap-2 align-items-center button">
                             <button className="btn d-flex gap-2 align-items-center" >
                                 <div className="img">
-                                    <img src={avt} alt="" />
+                                    <img src={currentUsers.avatar} alt="" />
                                 </div>
                                 <div className="right-side d-flex">
-                                    <div className="name">Nguyễn Ngọc Châu</div>
-                                    <div className="postition">Desgin team</div>
+                                    <div className="name">{currentUsers.name}</div>
+                                    <div className="postition">{currentUsers.position}</div>
                                 </div>
                             </button>
                         </div>

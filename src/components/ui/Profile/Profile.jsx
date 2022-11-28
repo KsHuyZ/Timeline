@@ -1,21 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Col } from 'reactstrap'
 import img from "../../../assets/profile.png"
 import './profile.css'
 import DoneIcon from '@mui/icons-material/Done';
+import axios from '../../../lib/axios';
+import { useState } from 'react';
 
-const Profile = () => {
+const Profile = ({ idUser }) => {
+  const [user, setUser] = useState()
+  const handleGetUser = async () => {
+    const res = await axios.get(`/users/${idUser}`)
+    setUser(res.data.data)
+  }
+
+  useEffect(() => {
+    handleGetUser()
+  }, [idUser])
+
   return (
     <Col lg="4" className="mb-5">
       <div className="profile-section">
         <div className="profile d-flex">
           <div className="top-profile d-flex">
             <div className="image-profile">
-              <img src={img} alt="" />
+              <img src={user?.avatar} alt="" />
             </div>
             <div className="name-position d-flex">
-              <div className="name">Phan Thanh Tùng</div>
-              <div className="position">Trưởng phòng</div>
+              <div className="name">{user?.name}</div>
+              <div className="position">{user?.position}</div>
               <div className="is-active d-flex align-items-center ">
                 <DoneIcon fontSize='10px' style={{ color: '#1890FF' }} />
                 <div>Đang hoạt động</div>
@@ -32,15 +44,15 @@ const Profile = () => {
             <div className="infor-profile d-flex mt-4">
               <div className="date-gender d-flex">
                 <div className="birth-date">
-                  Ngày sinh: 01/06/1995
+                  Ngày sinh: {user?.birthday}
                 </div>
                 <div className="gender">
-                  Giới tính: Nam
+                  Giới tính: {user?.gender}
                 </div>
               </div>
               <div className="email-address d-flex">
-                <div className="email">Email: thanhtung@gmail.com</div>
-                <div className="address">Địa chỉ: Quận Gò Vấp, Thành phố Hồ Chí Minh</div>
+                <div className="email">Email: {user?.email}</div>
+                <div className="address">Địa chỉ: {user?.address}</div>
               </div>
             </div>
           </div>

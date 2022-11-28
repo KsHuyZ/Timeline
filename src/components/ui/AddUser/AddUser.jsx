@@ -31,14 +31,14 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
     const [password, setPassword] = useState()
     const [address, setAddress] = useState()
     const [position, setPosition] = useState()
-    const [gender, setGender] = useState("male")
+    const [gender, setGender] = useState("Nam")
     const handleChange = (newValue) => {
         setValue(newValue);
     };
 
     const notifyError = () => toast.error(`${type === "add" ? "Tạo người dùng mới thất bại!" : "Cập nhật thông tin người dùng thất bại"} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -47,9 +47,9 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
         theme: "colored",
     });
 
-    const notifySuccess = () => toast.success(`${type === "add" ? "Tạo người dùng mới thành công" : "Cập nhật người dùng thành c"}`, {
+    const notifySuccess = () => toast.success(`${type === "add" ? "Tạo người dùng mới thành công" : "Cập nhật người dùng thành công"}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -86,7 +86,7 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
         if (!fullName || !email || !position || !password || !role || !address || !imgPreview) {
             toast.error('Vui lòng nhập tất cả các trường', {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -99,6 +99,7 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
 
         try {
 
+
             await axios.post(`/users/${type === "add" ? "create-user" : user}`, {
                 name: fullName,
                 position,
@@ -108,10 +109,14 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
                 avatar: imgPreview,
                 gender,
                 idDepartment: departmentSelected,
-                address
+                address,
+                birthday: value.format("YYYY-MM-DD")
+
             })
             notifySuccess()
-            setType()
+            setTimeout(() => {
+                setType()
+            }, 3000)
             getAllUser()
 
         } catch (error) {
@@ -123,40 +128,25 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
         console.log("id", user);
         const data = await axios.get(`/users/${user}`)
         const response = data.data.data
+        console.log(response);
         setFullName(response.name)
         setPosition(response.position)
         setPassword(response.password)
         setAddress(response.address)
         setEmail(response.email)
-        setValue(response.birthday)
-        setDepartmentSelected(response.idDepartment._id)
+        setValue(dayjs(new Date(response.birthday)))
+        setDepartmentSelected(response.idDepartment?._id)
         setRole(response.role)
-        setUrlImg(response.avatar)
+        setImgPreview(response.avatar)
+
     }
 
-    const handleUpdateUser = async () => {
-        try {
-            await axios.post(`/users/${user}`, {
-                name: fullName,
-                position,
-                email,
-                password,
-                role,
-                avatar: imgPreview,
-                gender,
-                idDepartment: departmentSelected,
-                address
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     useEffect(() => {
         const fecthDepartment = async () => {
             const data = await axios.get("/department/show")
             setDepartments(data.data.data)
-            setDepartmentSelected(data.data.data[0]._id)
+
         }
         fecthDepartment()
         if (type === "edit") {
@@ -208,7 +198,7 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DesktopDatePicker
                                         label="Ngày tháng năm sinh"
-                                        inputFormat="MM/DD/YYYY"
+                                        inputFormat="DD/MM/YYYY"
                                         value={value}
                                         onChange={handleChange}
                                         renderInput={(params) => <TextField {...params} />}
@@ -216,12 +206,13 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
                                 </LocalizationProvider>
 
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Phòng ban</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">Phòng ban (Không bắt buộc)</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={departmentSelected}
-                                        label="Phòng ban"
+
+                                        label="Phòng ban (Không bắt buộc)"
                                         onChange={handleChangeDepartment}
                                     >
                                         {departments?.map((department, index) => (
@@ -261,12 +252,12 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
                                     aria-labelledby="demo-row-radio-buttons-group-label"
                                     name="row-radio-buttons-group"
                                     style={{ marginLeft: 10 }}
-                                    defaultValue="male"
+
                                     value={gender}
                                     onChange={(e) => setGender(e.target.value)}
                                 >
-                                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                                    <FormControlLabel value="Nam" control={<Radio />} label="Nam" />
+                                    <FormControlLabel value="Nữ" control={<Radio />} label="Nữ" />
                                 </RadioGroup>
                             </FormControl>
                         </div>
@@ -277,7 +268,7 @@ const AddUser = ({ type, setType, user, setUser, getAllUser }) => {
                         Hủy bỏ
                     </div>
                     <div className="add">
-                        <button type="button" class="btn btn-primary" onClick={handleCreateUser}>{type === "add" ? "Thêm mới" : "Lưu lại"}</button>
+                        <button type="button" disabled={imgPreview ? false : true} class="btn btn-primary" onClick={handleCreateUser} >{type === "add" ? "Thêm mới" : "Lưu lại"}</button>
                     </div>
                 </div>
             </div>

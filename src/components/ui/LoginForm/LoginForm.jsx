@@ -7,12 +7,18 @@ import facebook from "../../../assets/facebook-logo.webp"
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { GoogleLogin } from "react-google-login"
+import axios from '../../../lib/axios'
+import { useNavigate } from 'react-router-dom'
 // import { useGoogleAuth } from '../../context/GoogleAuthContext'
 
 // import { GoogleLogin } from '@react-oauth/google';
 
 const LoginForm = ({ setShowLoginForm }) => {
     const [showPassword, setShowPassword] = useState(false)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const navigate = useNavigate()
+
     // const { signIn } = useGoogleAuth();
     const handleClickShowPassword = () => {
         setShowPassword(prev => !prev)
@@ -21,16 +27,7 @@ const LoginForm = ({ setShowLoginForm }) => {
         event.preventDefault();
     };
 
-    const notify = () => toast.error('🦄 Wow so easy!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
+
 
     const clientId = "1040584853647-fc7vghvfpdjnilc9bi39nt3ltes56el8.apps.googleusercontent.com"
 
@@ -41,6 +38,52 @@ const LoginForm = ({ setShowLoginForm }) => {
     const onFailure = (res) => {
         console.log(res)
     }
+
+    const notify = (msg) => toast.error(msg, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
+
+    const notifySuccess = () => toast.success("Đăng nhập thành công", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    })
+
+    const handleLogin = async () => {
+        try {
+            const res = await axios.post("/users/sign-in", {
+                email,
+                password
+            })
+            if (!res.data.msg) {
+                notifySuccess()
+                localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+                setTimeout(() => {
+                    navigate("/")
+                }, 5000)
+            }
+        } catch (error) {
+            if (error.response.data.msg === 1) {
+                notify("Email chưa được đăng ký trong hệ thống")
+            } else {
+                notify("Sai mật khẩu!")
+            }
+
+        }
+    }
+
     return (
         <div className="col-md-7 right-side">
             <div className="wrapper-right-side">
@@ -51,7 +94,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                     </div>
                     <form action="#" method="post">
                         <div className="form-group first mb-3">
-                            <TextField id="outlined-search" label="Nhập email" type="search" style={{ width: "100%" }} />
+                            <TextField id="outlined-search" label="Nhập email" type="search" style={{ width: "100%" }} value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className="form-group last mb-3">
                             <FormControl sx={{ width: '100%' }} variant="outlined">
@@ -59,6 +102,8 @@ const LoginForm = ({ setShowLoginForm }) => {
                                 <OutlinedInput
                                     id="outlined-adornment-password"
                                     type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
@@ -84,7 +129,7 @@ const LoginForm = ({ setShowLoginForm }) => {
 
                             <span className="ml-auto"><Link to="#" className="forgot-pass">Bạn quên mật khẩu, <span style={{ color: "#1683e8" }} onClick={() => setShowLoginForm(false)}>nhấn tại đây </span></Link></span>
                         </div>
-                        <input type="button" value="Đăng nhập" className="btn btn-block py-2 btn-primary w-100" style={{ boxShadow: "0px 0px 20px rgba(17, 17, 17, 0.15)" }} onClick={notify} />
+                        <input type="button" value="Đăng nhập" className="btn btn-block py-2 btn-primary w-100" style={{ boxShadow: "0px 0px 20px rgba(17, 17, 17, 0.15)" }} onClick={handleLogin} />
                         <span className="text-center my-3 d-block">Hoặc đăng nhập bằng</span>
                         <div className="login-by" >
                             {/* <Link to="#" className="btn btn-block py-2 w-100 mb-3 google-btn d-flex align-items-center justify-content-center" >
@@ -92,7 +137,7 @@ const LoginForm = ({ setShowLoginForm }) => {
                                     Tiếp tục với google
                                 </div>
                             </Link> */}
-                            <GoogleLogin clientId={clientId} onSuccess={onSuccess} onFailure={onFailure} buttonText="Tiếp tục với google" cookiePolicy={'single_host_origin'} className="w-100 google-btn btn"  />
+                            <GoogleLogin clientId={clientId} onSuccess={onSuccess} onFailure={onFailure} buttonText="Tiếp tục với google" cookiePolicy={'single_host_origin'} className="w-100 google-btn btn" />
 
                             {/* <GoogleLogin
                                 onSuccess={credentialResponse => {

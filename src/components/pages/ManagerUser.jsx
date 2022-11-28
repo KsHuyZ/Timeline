@@ -67,7 +67,7 @@ const ManagerUser = () => {
     const [users, setUsers] = useState([])
     const [userSelected, setUserSelected] = useState()
     const rows = users.map((user, index) => (
-        createData(index + 1, user.name, user.email, user.position, user.idDepartment.nameDepartment, user.role, user._id)
+        createData(index + 1, user.name, user.email, user.position, user.idDepartment?.nameDepartment, user.role, user._id)
     ))
 
 
@@ -182,7 +182,10 @@ const ManagerUser = () => {
                                                                 setTypeModal("edit")
                                                                 setUserSelected(row.id)
                                                             }} />
-                                                            <CloseIcon style={{ cursor: "pointer" }} onClick={() => setOpenModalDelete(true)} />
+                                                            <CloseIcon style={{ cursor: "pointer" }} onClick={() => {
+                                                                setOpenModalDelete(true)
+                                                                setUserSelected(row.id)
+                                                            }} />
                                                         </TableCell>
                                                     </TableRow>
                                                 );

@@ -6,31 +6,42 @@ import img from "../../../assets/employee.png"
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
-// import Button from '@mui/material/Button';
-const employees = [
-    { id: 1, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 2, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 3, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 4, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 5, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 6, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 7, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-    { id: 8, name: "Phan Thanh Tùng", mail: "tungphan@gmail.com", position: "Trưởng phòng", imgUrl: img },
-]
+import axios from '../../../lib/axios';
+import { useEffect } from 'react';
 
 
-const MemberTable = ({ showModal }) => {
+const MemberTable = ({ showModal, id, setUser }) => {
 
     const [showEditBtns, setShowEditBtns] = useState(false)
     const [memberSelected, setMemberSelected] = useState()
-
+    const [members, setMembers] = useState([])
+    const [email, setEmail] = useState("")
     const handleSelectMember = (id) => {
         if (memberSelected !== id) {
+            setUser(id)
             setMemberSelected(id)
         } else {
             setMemberSelected()
         }
     }
+
+    const handleGetUsers = async () => {
+        const res = await axios.get(`/users/belong-to-department/${id}`)
+        setMembers(res.data.data)
+    }
+    const handleSearchUserByEmail = async (e) => {
+        if (e.target.value === "") {
+            return handleGetUsers()
+        }
+        const res = await axios.get(`/users/search-has-department/${id}/${e.target.value}`)
+        setMembers(res.data.data)
+    }
+    useEffect(() => {
+        if (id) {
+            handleGetUsers()
+        }
+
+    }, [id])
 
     return (
 
@@ -43,34 +54,34 @@ const MemberTable = ({ showModal }) => {
                         </div>
                         <div className="edit d-flex align-items-center">
                             {showEditBtns ? (<>
-                                <button type="button" class="btn btn-primary" ><SaveIcon />Lưu</button>
+                                <button type="button" className="btn btn-primary" ><SaveIcon />Lưu</button>
                                 <div className='exit' onClick={() => setShowEditBtns(false)}>Hủy bỏ</div>
 
-                            </>) : (<button type="button" class="btn btn-primary" onClick={() => setShowEditBtns(true)}> Chỉnh sửa</button>)}
+                            </>) : (<button type="button" className="btn btn-primary" onClick={() => setShowEditBtns(true)}> Chỉnh sửa</button>)}
                         </div>
                     </div>
 
                 </div>
                 <div className="input-section">
-                    <TextField id="outlined-search" label="Vui lòng nhập email nhân viên" type="search" />
+                    <TextField id="outlined-search" label="Vui lòng nhập email nhân viên" type="search" onChange={handleSearchUserByEmail} />
                 </div>
                 <div className="list-employees">
-                    {employees.map((employee, index) => (
-                        <div key={index} className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""} ${memberSelected === employee.id ? "selected" : ""}`} onClick={() => handleSelectMember(employee.id)} >
+                    {members?.map((employee, index) => (
+                        <div key={index} className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""} ${memberSelected === employee._id ? "selected" : ""}`} onClick={() => handleSelectMember(employee._id)} >
                             <div className="title-profile d-flex">
                                 <div className="avt">
-                                    <img src={employee.imgUrl} alt="" />
+                                    <img src={employee.avatar} alt="" />
                                 </div>
                                 <div className="detail">
                                     <div className="name-email">
-                                        {`${employee.name} - ${employee.mail}`}
+                                        {`${employee.name} - ${employee.email}`}
                                     </div>
                                     <div className="postion">
                                         {`${employee.position}`}
                                     </div>
                                 </div>
                             </div>
-                            {memberSelected === employee.id && <div className="action-icons">
+                            {memberSelected === employee._id && <div className="action-icons">
                                 <SettingsIcon />
                                 <CloseIcon onClick={() => showModal(true)} style={{ cursor: 'pointer' }} />
                             </div>}

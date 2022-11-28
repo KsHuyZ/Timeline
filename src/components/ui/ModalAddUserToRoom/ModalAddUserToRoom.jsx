@@ -3,74 +3,41 @@ import { Button, Col, Container, Row } from "reactstrap";
 import { Input, TextField } from "@mui/material";
 import "../../../styles/manager-user.css";
 import "./modal-add.css"
-import img from "../../../assets/employee.png";
 import SaveIcon from "@mui/icons-material/Save";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import Checkbox from '@mui/material/Checkbox';
-// import Button from '@mui/material/Button';
-const employees = [
-  {
-    id: 1,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 2,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 3,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 4,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 5,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 6,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 7,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-  {
-    id: 8,
-    name: "Phan Thanh Tùng",
-    mail: "tungphan@gmail.com",
-    position: "Trưởng phòng",
-    imgUrl: img,
-  },
-];
+import { useEffect } from "react";
+import axios from "../../../lib/axios";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const ModalAddUserToRoom = ({ showModal }) => {
-  const [showEditBtns, setShowEditBtns] = useState(false);
+
+const ModalAddUserToRoom = ({ showModal, idDepartment }) => {
   const [memberSelected, setMemberSelected] = useState([]);
+  const [users, setUsers] = useState([])
+
+  const notifySuccess = () => toast.success("Thêm người dùng vào phòng ban thành công !", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+  const notifyError = () => toast.error(`Thêm người dùng vào phòng ban thất bại`, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
 
   const handleSelectMember = (id) => {
     console.log(id);
@@ -81,6 +48,39 @@ const ModalAddUserToRoom = ({ showModal }) => {
       setMemberSelected(arr);
     }
   };
+
+  const handleGetUserNotDepartment = async () => {
+    const res = await axios.get("/users/not-department")
+    setUsers(res.data)
+  }
+
+  const handleSearchByEmail = async (e) => {
+    if (e.target.value === "") {
+      return handleGetUserNotDepartment()
+    }
+    const res = await axios.get(`/users/search-has-not-department/${e.target.value}`)
+    setUsers(res.data)
+  }
+
+  const handleAddUserToDepartment = () => {
+    try {
+      memberSelected.map(async (member) => {
+        await axios.put(`/users/update-department/${member}`, {
+          idDepartment
+        })
+      })
+      notifySuccess()
+      // showModal(false)
+    } catch (error) {
+      notifyError()
+    }
+
+
+  }
+
+  useEffect(() => {
+    handleGetUserNotDepartment()
+  }, [])
 
   return (
     <div className="modal-add-user">
@@ -93,7 +93,7 @@ const ModalAddUserToRoom = ({ showModal }) => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => showModal(false)}
+                  onClick={handleAddUserToDepartment}
                 >
                   Thêm thành viên
                 </button>
@@ -105,23 +105,24 @@ const ModalAddUserToRoom = ({ showModal }) => {
               id="outlined-search"
               label="Vui lòng nhập email nhân viên"
               type="search"
+              onChange={handleSearchByEmail}
             />
           </div>
           <div className="list-employees">
-            {employees.map((employee, index) => (
+            {users.map((employee, index) => (
               <div
                 key={index}
                 className={`emplopyee d-flex ${index % 2 === 0 ? "active" : ""}`}
-                onClick={() => handleSelectMember(employee.id)}
+                onClick={() => handleSelectMember(employee._id)}
               >
                 <div className="title-profile d-flex">
-                  <Checkbox checked={memberSelected.includes(employee.id)} />
+                  <Checkbox checked={memberSelected.includes(employee._id)} />
                   <div className="avt">
-                    <img src={employee.imgUrl} alt="" />
+                    <img src={employee.avatar} alt="" />
                   </div>
                   <div className="detail">
                     <div className="name-email">
-                      {`${employee.name} - ${employee.mail}`}
+                      {`${employee.name} - ${employee.email}`}
                     </div>
                     <div className="postion">{`${employee.position}`}</div>
                   </div>
@@ -132,6 +133,7 @@ const ModalAddUserToRoom = ({ showModal }) => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

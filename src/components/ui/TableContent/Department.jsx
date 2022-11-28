@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import axios from '../../../lib/axios';
 
-const Department = ({ item, setIsActive, isActive, showModal }) => {
+const Department = ({ item, setIsActive, isActive, showModal, setIdDepartment }) => {
     // const [btnState, setBtnState] = useState(false)
     // let toggleClass = btnState ? "active" : ""
 
+
+
     const handleToggle = () => {
         setIsActive(item.id)
+      
+        setIdDepartment(item.id)
     }
 
 

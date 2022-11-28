@@ -20,16 +20,6 @@ const Login = () => {
   }
  
 
-  const notify = () => toast.error('🦄 Wow so easy!', {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -37,17 +27,6 @@ const Login = () => {
   return (
     <div className="half">
       <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        toastStyle={{ backgroundColor: "#FFE7D9" }}
       />
       <div className="contents">
         <div className="container">
