@@ -13,7 +13,7 @@ import TableContent from '../ui/TableContent/TableContent'
 const Home = () => {
     const [showMemberTable, setShowMemberTable] = useState(false)
     const [showModalMember, setShowModalMember] = useState(false)
-    const [showModalAddUserRoom, setShowModalAddUserRoom] = useState(true)
+    const [showModalAddUserRoom, setShowModalAddUserRoom] = useState(false)
     const handleShowMembers = () => {
         setShowMemberTable((prev) => !prev)
     }

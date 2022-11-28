@@ -3,11 +3,13 @@ import { Col, Container, Row } from 'reactstrap'
 import './table-content.css'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Department from './Department';
+import axios from "../../../lib/axios";
 
 
 const contentArray =
     [
         {
+            id: "HN",
             branchName: "Chi nhánh Hà Nội",
             departments: [
                 { id: 1, name: "Phòng nhân sự" },
@@ -17,7 +19,8 @@ const contentArray =
             ]
         },
         {
-            branchName: "Chi nhánh Hà Nội",
+            id: "DN",
+            branchName: "Chi nhánh Đà Nẵng",
             departments: [
                 { id: 4, name: "Phòng nhân sự" },
                 { id: 5, name: "Phòng kế toán" },
@@ -26,7 +29,8 @@ const contentArray =
             ]
         },
         {
-            branchName: "Chi nhánh Hà Nội",
+            id: "HCM",
+            branchName: "Chi nhánh Hồ Chí Minh",
             departments: [
                 { id: 7, name: "Phòng nhân sự" },
                 { id: 8, name: "Phòng kế toán" },
@@ -40,8 +44,8 @@ const contentArray =
 
 const TableContent = ({ showMembers, showModal }) => {
 
-
     const [isOpenArray, setIsOpenArray] = useState([0, 1, 2])
+    const [branch, setBranch] = useState([])
     const [isActive, setIsActive] = useState()
     const handleSetOpenTab = (index) => {
         if (!isOpenArray.includes(index)) {
@@ -56,6 +60,17 @@ const TableContent = ({ showMembers, showModal }) => {
         }
 
     }
+
+    const handleGetBranch = async () => {
+        const response = await axios.get("/department/show")
+        console.log(response.data.data  );
+        // setBranch(response)
+    }
+
+    useEffect(() => {
+        handleGetBranch()
+
+    }, [])
 
 
 
@@ -74,7 +89,7 @@ const TableContent = ({ showMembers, showModal }) => {
                             </div>
                             {isOpenArray.includes(index) && <div className="department-list">
                                 {item.departments.map((i, id) => (
-                                    <Department key={id} item={i} setIsActive={setIsActive} isActive={isActive} showModal={showModal}/>
+                                    <Department key={id} item={i} setIsActive={setIsActive} isActive={isActive} showModal={showModal} />
                                 ))}
                             </div>}
 
