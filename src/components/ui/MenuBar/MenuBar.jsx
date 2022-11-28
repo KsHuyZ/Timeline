@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => {
     });
 });
 
-const MenuBar = ({ age, handleChange, userOnline, showModal }) => {
+const MenuBar = ({ handleChange, userOnline, showModal }) => {
     const { search } = useStyles();
     return (
         <Row className='align-items-center row-menubar'>
@@ -28,7 +28,6 @@ const MenuBar = ({ age, handleChange, userOnline, showModal }) => {
                     <div className="select-side">
                         <FormControl sx={{ m: 1 }} className="form-control" >
                             <Select
-                                value={age}
                                 onChange={handleChange}
                                 displayEmpty
                                 inputProps={{ 'aria-label': 'Without label' }}

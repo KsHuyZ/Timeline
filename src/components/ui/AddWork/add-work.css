@@ -2,17 +2,20 @@
   position: fixed;
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4);
-  width: 100vw;
-  height: 100vh;
-  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 .modal-add .pop-up-add {
   background-color: white;
-  width: 30vw;
-  /* height: 20vw; */
+  overflow-y: scroll;
+  width: 70vw;
+  height:40vw;
   border-radius: 6px;
   /* background-color: white; */
   padding: 16px 21px;
@@ -20,6 +23,11 @@
 .modal-add .pop-up-add .title-title-add .title {
   flex-direction: column;
   height: 10vh;
+}
+
+.final-title{
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .modal-add .pop-up-add {
@@ -46,4 +54,33 @@
 .modal-add .button-add {
   margin-top: 10px;
   justify-content: flex-end;
+}
+
+.select-form-mui{
+  padding: 15px 10px;
+  border: 1px solid #919eab;
+  
+}
+
+.input-date{
+  display: flex;
+}
+
+.date-form{
+  width: 200px;
+}
+
+.form-date-here{
+ margin-right: 20px;
+}
+
+.set-img{
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.preview-img{
+  display: inline-block;
+  margin-bottom: 20px;
 }
